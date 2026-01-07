@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    #url: jdbc:postgresql://localhost:5432/consolaPruebas
+    #url: jdbc:postgresql://host.docker.internal:5432/consolaPruebas
+    url: jdbc:postgresql://host.docker.internal:5432/baseReal
+    username: Leo
+    password: DPR345
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    user:
+      name: disabled
+      password: disabled
+
+server:
+  port: 8080
