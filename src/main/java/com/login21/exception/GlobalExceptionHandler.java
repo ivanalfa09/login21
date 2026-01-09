@@ -44,4 +44,14 @@ public class GlobalExceptionHandler {
                         "error", "Error interno del servidor"
                 ));
     }
+
+    @ExceptionHandler(InvalidPasswordFormatException.class) //Password invalido
+    public ResponseEntity<?> handleInvalidPasswordFormat(InvalidPasswordFormatException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "error", ex.getMessage()
+                ));
+    }
+
 }

@@ -5,6 +5,7 @@ import com.login21.entity.User;
 import com.login21.exception.UserAlreadyExistsException;
 import com.login21.repository.AccessCredentialRepository;
 import com.login21.repository.UserRepository;
+import com.login21.security.PasswordValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,16 +35,17 @@ public class UserRegistrationService {
             throw new UserAlreadyExistsException();
         }
 
-        /*Crear credenciales*/
+        // 🔐 Validar contraseña antes de guardar
+        PasswordValidator.validate(rawPassword);
+
         AccessCredential cred = new AccessCredential();
         cred.setUser(username);
         cred.setPassword(passwordEncoder.encode(rawPassword));
 
         cred = credentialRepository.save(cred);
 
-        /*Crear usuario*/
         User user = new User();
-        user.setUserLevel(1); // default
+        user.setUserLevel(1);
         user.setUuid(UUID.randomUUID().toString());
         user.setAccessCredential(cred);
 
