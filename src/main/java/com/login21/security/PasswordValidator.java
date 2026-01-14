@@ -5,7 +5,7 @@ import com.login21.exception.InvalidPasswordFormatException;
 public class PasswordValidator {
 
     private static final String PASSWORD_REGEX =
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
+             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{8,}$";
 
     public static void validate(String password) {
 
@@ -17,7 +17,7 @@ public class PasswordValidator {
 
         if (!password.matches(PASSWORD_REGEX)) {
             throw new InvalidPasswordFormatException(
-                    "La contraseña debe contener mayúsculas, minúsculas y números"
+                    "La contraseña debe contener mayúsculas, minúsculas, números y caracteres especiales"
             );
         }
 
