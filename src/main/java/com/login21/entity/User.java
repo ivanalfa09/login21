@@ -12,7 +12,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false) /*es el dato con el que se relaciona la tabla*/
     @JoinColumn(name = "\"idAcessCredentials\"", nullable = false)
     private AccessCredential accessCredential;
 

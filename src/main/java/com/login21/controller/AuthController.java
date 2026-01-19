@@ -33,8 +33,13 @@ public class AuthController {
                 request.getPassword()
         );
 
-        return ResponseEntity.ok("Usuario creado con ID: " + user.getId());
-    }
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Usuario creado",
+                        "Usuario:", user.getAccessCredential().getIdUser()
+                )
+        );    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {

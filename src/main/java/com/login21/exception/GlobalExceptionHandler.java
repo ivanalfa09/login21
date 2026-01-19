@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(Exception.class)
+   /* @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
                         "error", "Error interno del servidor"
                 ));
     }
-
+*/
     @ExceptionHandler(InvalidPasswordFormatException.class) //Password invalido
     public ResponseEntity<?> handleInvalidPasswordFormat(InvalidPasswordFormatException ex) {
         return ResponseEntity
