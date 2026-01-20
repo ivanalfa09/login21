@@ -36,6 +36,15 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+
+    @ExceptionHandler(InvalidPasswordFormatException.class) //Password invalido
+    public ResponseEntity<?> handleInvalidPasswordFormat(InvalidPasswordFormatException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "error", ex.getMessage()
+                ));
+    }
    /* @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
         return ResponseEntity
@@ -45,13 +54,4 @@ public class GlobalExceptionHandler {
                 ));
     }
 */
-    @ExceptionHandler(InvalidPasswordFormatException.class) //Password invalido
-    public ResponseEntity<?> handleInvalidPasswordFormat(InvalidPasswordFormatException ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(Map.of(
-                        "error", ex.getMessage()
-                ));
-    }
-
 }

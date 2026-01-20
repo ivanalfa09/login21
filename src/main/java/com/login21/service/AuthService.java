@@ -12,15 +12,16 @@ public class AuthService {
 
     private final AccessCredentialRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final LogService logService;
 
     public AuthService(
             AccessCredentialRepository repository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, LogService logService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
     }
-
-    public void login(String user, String password) {
+    public AccessCredential login(String user, String password) {
 
         AccessCredential cred = repository.findByUser(user)
                 .orElseThrow(UserNotFoundException::new);
@@ -28,6 +29,17 @@ public class AuthService {
         if (!passwordEncoder.matches(password, cred.getPassword())) {
             throw new InvalidPasswordException();
         }
+        return cred;
+        /*
+        logService.log(
+                cred.getId(),     // o idUser si lo tienes mapeado
+                "LOGIN",
+                cred.getUser(),
+                cred.getId(),
+                "Inicio de sesión exitoso",
+                "SYSTEM"
+        );
+         */
     }
 }
 

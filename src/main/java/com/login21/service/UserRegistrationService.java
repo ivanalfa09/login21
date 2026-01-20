@@ -20,15 +20,20 @@ public class UserRegistrationService {
     private final UserRepository userRepository;
     private final AccessCredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
+    //private final LogService logService;
 
     public UserRegistrationService(
             UserRepository userRepository,
             AccessCredentialRepository credentialRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder
+           // LogService logService
+    ) {
         this.userRepository = userRepository;
         this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
+        //this.logService = logService;
     }
+
 
     public User register(String username, String rawPassword) {
 
@@ -50,6 +55,22 @@ public class UserRegistrationService {
         user.setUserLevel(1);
         user.setUuid(UUID.randomUUID().toString());
         user.setAccessCredential(cred);
+
+       /*
+       User savedUser = userRepository.save(user);
+
+        // LOG DE AUDITORÍA
+        logService.log(
+                savedUser.getId(),          // actorId
+                "REGISTER",                 // acción
+                savedUser.getAccessCredential().getUser(),// entidad
+                savedUser.getId(),          // entityId
+                "Registro de nuevo usuario",
+                "SYSTEM"                    // origen
+        );
+
+        return savedUser;
+        */
 
         return userRepository.save(user);
     }

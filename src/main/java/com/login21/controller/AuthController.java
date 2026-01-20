@@ -1,5 +1,6 @@
 package com.login21.controller;
 
+import com.login21.entity.AccessCredential;
 import com.login21.entity.User;
 import com.login21.model.LoginRequest;
 import com.login21.model.RegisterRequest;
@@ -37,14 +38,14 @@ public class AuthController {
         return ResponseEntity.ok(
                 Map.of(
                         "message", "Usuario creado",
-                        "Usuario:", user.getAccessCredential().getIdUser()
+                        "IdUser:", user.getAccessCredential().getIdUser()
                 )
         );    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-        authService.login(
+       AccessCredential cred = authService.login(
                 request.getUser(),
                 request.getPassword()
         );
