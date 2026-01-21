@@ -47,7 +47,7 @@ public class UserRegistrationService {
         AccessCredential cred = new AccessCredential();
         cred.setUser(username);
         cred.setPassword(passwordEncoder.encode(rawPassword));
-        cred.setIdUser(generateUniquePublicId());
+        cred.setIdUser("DPR-"+generateUniquePublicId());
 
         cred = credentialRepository.save(cred);
 
