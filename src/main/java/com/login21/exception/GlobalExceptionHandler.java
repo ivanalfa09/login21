@@ -45,6 +45,14 @@ public class GlobalExceptionHandler {
                         "error", ex.getMessage()
                 ));
     }
+
+    @ExceptionHandler(UserBlockedException.class)
+    public ResponseEntity<?> handleBlocked(UserBlockedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", ex.getMessage()));
+    }
+
    /* @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
         return ResponseEntity

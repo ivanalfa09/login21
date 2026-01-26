@@ -25,6 +25,11 @@ public class User {
     @Column(name= "\"createdAt\"", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"idStatus\"", nullable = false)
+    private Status status;
+
+
     /*Getter y setters*/
 
     public Integer getId() {
@@ -65,5 +70,13 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

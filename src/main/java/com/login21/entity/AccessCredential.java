@@ -24,6 +24,9 @@ public class AccessCredential {
     @Column(name= "\"createdAt\"", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "\"failedAttempts\"", nullable = false)
+    private Integer failedAttempts = 0;
+
     /*GETTER Y SETTER*/
 
     public Integer getId() {
@@ -64,5 +67,13 @@ public class AccessCredential {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public void setFailedAttempts(Integer failedAttempts) {
+        this.failedAttempts = failedAttempts;
     }
 }

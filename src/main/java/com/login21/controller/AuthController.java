@@ -37,7 +37,7 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 Map.of(
-                        "message", "Usuario creado",
+                        "message:", "Usuario creado",
                         "IdUser:", user.getAccessCredential().getIdUser()
                 )
         );    }
@@ -51,7 +51,7 @@ public class AuthController {
         );
 
         return ResponseEntity.ok(
-                Map.of("message", "Login exitoso")
+                Map.of("message:", "Login exitoso")
         );
     }
 

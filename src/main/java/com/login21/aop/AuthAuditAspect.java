@@ -25,9 +25,7 @@ public class AuthAuditAspect {
         this.credentialRepository = credentialRepository;
     }
 
-    // =========================
-    // REGISTER EXITOSO
-    // =========================
+    /*Registro Exitoso*/
     @AfterReturning(
             pointcut = "execution(* com.login21.service.UserRegistrationService.register(..))",
             returning = "result"
@@ -44,18 +42,13 @@ public class AuthAuditAspect {
         );
     }
 
-    // =========================
-    // LOGIN EXITOSO
-    // =========================
+    /*Login Exitoso*/
     @AfterReturning(
             pointcut = "execution(* com.login21.service.AuthService.login(..))",
             returning = "result"
     )
     public void logLoginSuccess(AccessCredential result) {
 
-       // AccessCredential accessCredential = new AccessCredential();
-
-       // String username = (String) joinPoint.getArgs()[0];
 
         logService.log(
                 result.getId(), // opcional si no tienes idUser directo
@@ -67,9 +60,7 @@ public class AuthAuditAspect {
         );
     }
 
-    // =========================
-    // LOGIN FALLIDO
-    // =========================
+    /*Login Fallido*/
     @AfterThrowing(
             pointcut = "execution(* com.login21.service.AuthService.login(..))",
             throwing = "ex"
@@ -106,9 +97,7 @@ public class AuthAuditAspect {
     }
 
 
-    // =========================
-    // IP DEL CLIENTE
-    // =========================
+    /*IP CLIENTE*/
     private String getClientIp() {
         ServletRequestAttributes attrs =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

@@ -56,22 +56,6 @@ public class UserRegistrationService {
         user.setUuid(UUID.randomUUID().toString());
         user.setAccessCredential(cred);
 
-       /*
-       User savedUser = userRepository.save(user);
-
-        // LOG DE AUDITORÍA
-        logService.log(
-                savedUser.getId(),          // actorId
-                "REGISTER",                 // acción
-                savedUser.getAccessCredential().getUser(),// entidad
-                savedUser.getId(),          // entityId
-                "Registro de nuevo usuario",
-                "SYSTEM"                    // origen
-        );
-
-        return savedUser;
-        */
-
         return userRepository.save(user);
     }
 
