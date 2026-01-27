@@ -94,6 +94,22 @@ public class AuthAuditAspect {
                             getClientIp()
                     ));
         }
+        else if (ex instanceof InvalidPasswordException) {
+
+            credentialRepository.findByUser(username).ifPresent(cred -> {
+                if (cred.getFailedAttempts() >= 3) {
+                    logService.log(
+                            cred.getId(),
+                            "USER_BLOCKED",
+                            "ACCESS_CREDENTIAL",
+                            cred.getId(),
+                            "Usuario bloqueado por intentos fallidos",
+                            getClientIp()
+                    );
+                }
+            });
+        }
+
     }
 
 

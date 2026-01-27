@@ -1,9 +1,11 @@
 package com.login21.service;
 
 import com.login21.entity.AccessCredential;
+import com.login21.entity.Status;
 import com.login21.entity.User;
 import com.login21.exception.UserAlreadyExistsException;
 import com.login21.repository.AccessCredentialRepository;
+import com.login21.repository.StatusRepository;
 import com.login21.repository.UserRepository;
 import com.login21.security.PasswordValidator;
 import com.login21.util.IdGenerator;
@@ -20,18 +22,19 @@ public class UserRegistrationService {
     private final UserRepository userRepository;
     private final AccessCredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
-    //private final LogService logService;
+    private final StatusRepository statusRepository;
+
 
     public UserRegistrationService(
             UserRepository userRepository,
             AccessCredentialRepository credentialRepository,
-            PasswordEncoder passwordEncoder
-           // LogService logService
+            PasswordEncoder passwordEncoder,
+            StatusRepository statusRepository
     ) {
         this.userRepository = userRepository;
         this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
-        //this.logService = logService;
+        this.statusRepository = statusRepository;
     }
 
 
@@ -51,10 +54,14 @@ public class UserRegistrationService {
 
         cred = credentialRepository.save(cred);
 
+        Status status = statusRepository.findById(1)
+                .orElseThrow(() -> new RuntimeException("Status id=1 no existe"));
+
         User user = new User();
         user.setUserLevel(1);
         user.setUuid(UUID.randomUUID().toString());
         user.setAccessCredential(cred);
+        user.setStatus(status);
 
         return userRepository.save(user);
     }
