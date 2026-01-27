@@ -1,9 +1,14 @@
 package com.login21.repository;
 
+import com.login21.entity.AccessCredential;
 import com.login21.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByAccessCredential(AccessCredential accessCredential);
+
 }

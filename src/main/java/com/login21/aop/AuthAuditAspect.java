@@ -20,47 +20,57 @@ public class AuthAuditAspect {
     private final LogService logService;
     private final AccessCredentialRepository credentialRepository;
 
-    public AuthAuditAspect(LogService logService, AccessCredentialRepository credentialRepository) {
+    public AuthAuditAspect(
+            LogService logService,
+            AccessCredentialRepository credentialRepository
+    ) {
         this.logService = logService;
         this.credentialRepository = credentialRepository;
     }
 
-    /*Registro Exitoso*/
+
+    // REGISTER EXITOSO
+
     @AfterReturning(
             pointcut = "execution(* com.login21.service.UserRegistrationService.register(..))",
-            returning = "result"
+            returning = "user"
     )
-    public void logRegisterSuccess(User result) {
+    public void logRegisterSuccess(User user) {
 
         logService.log(
-                result.getId(),
+                user.getId(),
                 "REGISTER",
-                result.getAccessCredential().getUser(),
-                result.getId(),
+                "USER",
+                user.getId(),
                 "Registro de nuevo usuario",
                 getClientIp()
         );
     }
 
-    /*Login Exitoso*/
+
+    // LOGIN EXITOSO
+
     @AfterReturning(
             pointcut = "execution(* com.login21.service.AuthService.login(..))",
-            returning = "result"
+            returning = "cred"
     )
-    public void logLoginSuccess(AccessCredential result) {
+    public void logLoginSuccess(AccessCredential cred) {
 
+        User user = cred.getUserEntity(); // 👈 relación correcta
 
         logService.log(
-                result.getId(), // opcional si no tienes idUser directo
+                user.getId(),
                 "LOGIN_SUCCESS",
-                result.getUser(),
-                result.getId(), // opcional si no tienes idUser directo,
-                "Inicio de sesión exitoso: " + result.getUser(),
+                "USER",
+                user.getId(),
+                "Inicio de sesión exitoso: " + cred.getUser(),
                 getClientIp()
         );
     }
 
-    /*Login Fallido*/
+
+    // LOGIN FALLIDO
+
     @AfterThrowing(
             pointcut = "execution(* com.login21.service.AuthService.login(..))",
             throwing = "ex"
@@ -69,51 +79,55 @@ public class AuthAuditAspect {
 
         String username = (String) joinPoint.getArgs()[0];
 
+        //  Usuario no existe
         if (ex instanceof UserNotFoundException) {
 
-            // Usuario NO existe
             logService.log(
                     null,
                     "LOGIN_FAILED",
-                    "ACCESS_CREDENTIAL",
+                    "USER",
                     null,
                     "Login fallido - usuario no existe: " + username,
                     getClientIp()
             );
-
-        } else if (ex instanceof InvalidPasswordException) {
-
-            // Usuario SÍ existe → buscamos su ID
-            credentialRepository.findByUser(username)
-                    .ifPresent(cred -> logService.log(
-                            cred.getId(),
-                            "LOGIN_FAILED",
-                            "ACCESS_CREDENTIAL",
-                            cred.getId(),
-                            "Login fallido - contraseña incorrecta",
-                            getClientIp()
-                    ));
+            return;
         }
-        else if (ex instanceof InvalidPasswordException) {
+
+        //  Password incorrecta (usuario sí existe)
+        if (ex instanceof InvalidPasswordException) {
 
             credentialRepository.findByUser(username).ifPresent(cred -> {
+
+                User user = cred.getUserEntity();
+
+                // intento fallido
+                logService.log(
+                        user.getId(),
+                        "LOGIN_FAILED",
+                        "USER",
+                        user.getId(),
+                        "Login fallido - contraseña incorrecta",
+                        getClientIp()
+                );
+
+                //  usuario bloqueado
                 if (cred.getFailedAttempts() >= 3) {
                     logService.log(
-                            cred.getId(),
+                            user.getId(),
                             "USER_BLOCKED",
-                            "ACCESS_CREDENTIAL",
-                            cred.getId(),
+                            "USER",
+                            user.getId(),
                             "Usuario bloqueado por intentos fallidos",
                             getClientIp()
                     );
                 }
             });
         }
-
     }
 
 
-    /*IP CLIENTE*/
+    // IP CLIENTE
+
     private String getClientIp() {
         ServletRequestAttributes attrs =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -123,6 +137,8 @@ public class AuthAuditAspect {
         HttpServletRequest request = attrs.getRequest();
         return request.getRemoteAddr();
     }
+}
+
     /*Para produccion*/
     /*
     private String getClientIp() {
@@ -141,4 +157,4 @@ public class AuthAuditAspect {
     return request.getRemoteAddr();
 }
 */
-}
+

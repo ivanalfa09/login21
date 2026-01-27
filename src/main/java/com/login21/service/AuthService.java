@@ -39,22 +39,22 @@ public class AuthService {
         AccessCredential cred = repository.findByUser(user)
                 .orElseThrow(UserNotFoundException::new);
 
-        User appUser = userRepository.findById(
-                Long.valueOf(cred.getId())
-        ).orElseThrow();
+        User appUser = userRepository
+                .findByAccessCredential(cred)
+                .orElseThrow(UserNotFoundException::new);
 
-        // 🚫 Usuario bloqueado
+        //  Usuario bloqueado
         if ("bloqueado".equalsIgnoreCase(appUser.getStatus().getStatus())) {
             throw new UserBlockedException();
         }
 
-        // ❌ Password incorrecta
+        //  Password incorrecta
         if (!passwordEncoder.matches(password, cred.getPassword())) {
 
             int attempts = cred.getFailedAttempts() + 1;
             cred.setFailedAttempts(attempts);
 
-            // 🔒 Bloquear usuario
+            //  Bloquear usuario
             if (attempts >= MAX_ATTEMPTS) {
                 Status blocked = statusRepository
                         .findByStatus("bloqueado")
@@ -69,7 +69,7 @@ public class AuthService {
             throw new InvalidPasswordException();
         }
 
-        // ✅ Login exitoso → resetear intentos
+        //  Login exitoso → resetear intentos
         cred.setFailedAttempts(0);
         repository.save(cred);
 

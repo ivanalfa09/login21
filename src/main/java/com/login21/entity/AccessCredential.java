@@ -27,6 +27,10 @@ public class AccessCredential {
     @Column(name = "\"failedAttempts\"", nullable = false)
     private Integer failedAttempts = 0;
 
+    @OneToOne(mappedBy = "accessCredential")
+    private User userEntity;
+
+
     /*GETTER Y SETTER*/
 
     public Integer getId() {
@@ -75,5 +79,13 @@ public class AccessCredential {
 
     public void setFailedAttempts(Integer failedAttempts) {
         this.failedAttempts = failedAttempts;
+    }
+
+    public User getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(User userEntity) {
+        this.userEntity = userEntity;
     }
 }
